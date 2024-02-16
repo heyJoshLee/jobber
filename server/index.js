@@ -9,10 +9,8 @@ import applicationRoutes from './routes/applications.js'
 
 // ENV VARS
 dotenv.config({ path: '../.env' })
-console.log(process.env.MONGO_URI)
 
 const app = express()
-
 
 // MIDDLEWARE
 app.use(bodyParser.json({ limit: '30mb', extended: true }))
@@ -29,8 +27,9 @@ app.use('/applications', applicationRoutes)
 
 // CONNECT TO MONGO DB
 const CONNECTION_URL = process.env.MONGO_URI
+const DBNAME = process.env.MONGO_DBNAME
 const PORT = process.env.PORT || 3001
-mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, dbName: DBNAME })
   .then(() => app.listen(PORT, () => {
     console.log(`server running on port ${PORT}.`)
   }))
