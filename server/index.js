@@ -1,9 +1,16 @@
 import express from 'express'
-
+import dotenv from 'dotenv'
 import bodyParser from 'body-parser'
+import mongoose from 'mongoose'
 
 // ROUTES IMPORT
 import applicationRoutes from './routes/applications.js'
+
+
+// ENV VARS
+dotenv.config({ path: '../.env' })
+console.log(process.env.MONGO_URI)
+
 const app = express()
 
 
@@ -20,8 +27,11 @@ app.get('/', (request, response) => {
 app.use('/applications', applicationRoutes)
 
 
-const PORT = 3001
-
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}.`)
-})
+// CONNECT TO MONGO DB
+const CONNECTION_URL = process.env.MONGO_URI
+const PORT = process.env.PORT || 3001
+mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => app.listen(PORT, () => {
+    console.log(`server running on port ${PORT}.`)
+  }))
+  .catch((error) => console.log(error.message))
