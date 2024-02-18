@@ -36,7 +36,7 @@ export const getApplication = async (request, response) => {
 
 // CREATE 
 export const createApplication = async (request, response) => {
-  const { applicationParams } = request.body
+  const applicationParams = request.body
 
   try {
     const newApplication = await new Application(applicationParams)

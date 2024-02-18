@@ -26,6 +26,10 @@ const applicationSchema = new mongoose.Schema({
   companyID: {
     type: String
   },
+  userID: {
+    type: String,
+    require: true
+  },
   timestamp: {
     type: Date,
     default: Date.now
