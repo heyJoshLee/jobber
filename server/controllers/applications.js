@@ -1,11 +1,12 @@
 import Application from "../models/application.js"
+import User from '../models/user.js'
 
 // GET /
 export const getApplications = async (request, response) => {
-  console.log('getting applications...')
   try {
-    const applications = await Application.find({})
-    console.log(applications)
+    const applications = await Application.find({
+      userId: request.user.id
+    })
     return response.status(200).json(applications)
   } catch (error) {
     console.log(error)
@@ -21,9 +22,13 @@ export const getApplication = async (request, response) => {
   const { id } = params
 
   try {
-
-    console.log('getting app')
     const application = await Application.findById(id)
+    if (application.userId !== request.user.id) {
+      return response.status(403).json({
+        message: 'User does not have the correct permissions for this application'
+      })
+    }
+
     return response.status(200).json(application)
 
   } catch (error) {
@@ -36,11 +41,11 @@ export const getApplication = async (request, response) => {
 
 // CREATE 
 export const createApplication = async (request, response) => {
-  const applicationParams = request.body
+  let applicationParams = request.body
 
   try {
+    applicationParams.userId = request.user.id
     const newApplication = await new Application(applicationParams)
-    console.log(newApplication)
     await newApplication.save()
     return response.status(200).json(newApplication)
   } catch (error) {
@@ -57,12 +62,17 @@ export const updateApplication = async (request, response) => {
   const { id } = params
   const applicationParams = request.body
 
-
-  console.log('values')
-  console.log(applicationParams)
-
   try {
-    const application = await Application.findByIdAndUpdate(id, applicationParams, { new: true })
+    let application = await Application.findById(id)
+
+    if (application.userId !== request.user.id) {
+      return response.status(403).json({
+        message: 'User does not have the correct permissions for this application'
+      })
+    }
+
+    // TODO: refactor updating record
+    application = await Application.findByIdAndUpdate(id, applicationParams, { new: true })
     response.status(200).json(application)
   } catch (error) {
     console.log(error)
@@ -70,8 +80,6 @@ export const updateApplication = async (request, response) => {
       message: "Application was not updated"
     })
   }
-
-
 }
 
 //DELETE /:id
@@ -80,11 +88,17 @@ export const deleteApplication = async (request, response) => {
   const { id } = params
 
   try {
-    const application = await Application.findByIdAndDelete(id)
 
+    let application = await Application.findById(id)
+
+    if (application.userId !== request.user.id) {
+      return response.status(403).json({
+        message: 'User does not have the correct permissions for this application'
+      })
+    }
+
+    application = await Application.findByIdAndDelete(id)
     response.status(200).json(application)
-
-
   } catch (error) {
     console.log(error)
     response.status(500).json({

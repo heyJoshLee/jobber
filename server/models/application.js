@@ -26,7 +26,7 @@ const applicationSchema = new mongoose.Schema({
   companyID: {
     type: String
   },
-  userID: {
+  userId: {
     type: String,
     require: true
   },
