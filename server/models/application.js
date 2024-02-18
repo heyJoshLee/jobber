@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const applicationSchema = new mongoose.Schema({
   title: {
     type: String,
-    require: true,
+    required: true,
     minlength: 3,
     maxlength: 120
   },
@@ -28,7 +28,7 @@ const applicationSchema = new mongoose.Schema({
   },
   userId: {
     type: String,
-    require: true
+    required: true
   },
   timestamp: {
     type: Date,

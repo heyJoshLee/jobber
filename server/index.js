@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 
 // ROUTES IMPORT
 import applicationRoutes from './routes/applications.js'
+import companyRoutes from './routes/companies.js'
 import userRoutes from './routes/users.js'
 import authRoutes from './routes/auth.js'
 
@@ -24,6 +25,7 @@ app.get('/', (request, response) => {
 })
 
 app.use('/applications', applicationRoutes)
+app.use('/companies', companyRoutes)
 app.use('/users', userRoutes)
 app.use('/auth', authRoutes)
 
