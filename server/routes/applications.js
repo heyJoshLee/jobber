@@ -11,4 +11,3 @@ router.delete('/:id', auth, deleteApplication)
 router.put('/:id', auth, updateApplication)
 
 export default router
-
